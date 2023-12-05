@@ -15,6 +15,9 @@ outputs:
   status:
     description: The number of changed paths reported by Git. If 0, no commit or push was attempted.
     value: ${{ steps.commit-push.outputs.status }}
+  committed:
+    description: 1 if a commit-and-push happened, empty otherwise. Basically `status` as a boolean.
+    value: ${{ steps.commit-push.outputs.committed }}
 runs:
   using: composite
   steps:
@@ -32,4 +35,5 @@ runs:
           git commit -m "${{ inputs.message }}"
           git pull --rebase origin master
           git push
+          echo "committed=$(( $STATUS_LINES != 0 ))" >> $GITHUB_OUTPUT
         fi
